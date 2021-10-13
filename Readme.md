@@ -1,6 +1,6 @@
 # Node JS translator for MS Translate API 🌎
 
-Get a list of translations without the hassle of Google translator 🙄
+### Get a list of translations without the hassle of Google translator 🙄
 
 This script is using [Rapid API's Azure Microsoft Translation implementation](https://rapidapi.com/microsoft-azure-org-microsoft-cognitive-services/api/microsoft-translator-text/)
 
