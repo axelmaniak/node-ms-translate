@@ -4,7 +4,15 @@ This script is using [Rapid API's Azure Microsoft Translation implementation](ht
 
 ## Usage
 
-Add your Rapid Api Key into `config.js` (See `config.js.dist` for reference)
+1. Add your Rapid Api Key into `config.js` (See `config.js.dist` for reference)
+
+2. Run
+
+```sh
+npm i
+```
+
+3.
 
 ```sh
 npm run translate -- -w <textToTranslate> -o <language1,language2>
