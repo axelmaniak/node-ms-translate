@@ -52,7 +52,7 @@ function init() {
 
   if (!text || !locales) {
     return console.error(
-      "Please provide a text to translate (--text) and at least a locale (--locales) for translating"
+      "Please provide a text to translate (-w) and at least a locale (-o) for translating"
     );
   }
 
