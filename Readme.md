@@ -20,9 +20,9 @@ npm run translate -- -w <textToTranslate> -o <language1,language2>
 
 Where
 
-`--w` Specifies the text to translate
+`-w ` Specifies the text to translate
 
-`--o` A comma separated list of the expected languages in which the text will be translated to
+`-o ` A comma separated list of the expected languages in which the text will be translated to
 
 A simple text list will be displayed with the requested results
 
