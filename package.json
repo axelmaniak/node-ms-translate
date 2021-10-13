@@ -1,0 +1,23 @@
+{
+  "name": "node-translate",
+  "version": "1.0.0",
+  "description": "Just a simple script for fetching multiple translations from once without the hassle",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "translate": "node index.js"
+  },
+  "keywords": [
+    "node-translate",
+    "translate",
+    "node",
+    "microsoft"
+  ],
+  "author": "daniela@danielabravo.io",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "axios": "0.23.0",
+    "minimist": "^1.2.5"
+  }
+}
