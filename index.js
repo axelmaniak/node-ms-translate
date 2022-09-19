@@ -1,36 +1,42 @@
 import axios from "axios";
 import minimist from "minimist";
 import config from "./config.js";
+import sys from 'sys';
+import child from 'child_process';
 
-// This should work if Rapid API got fixed and many languages could be sent simultaneously
+const translate = async (text, locales, key, afterKey, rootPath) => {
+  const defaultLocales = ['en', 'es', 'fr', 'hi', 'it', 'ko', 'pt', 'ru', 'tr', 'vi', 'zh-Hans'];
+  const localeArray = locales ? locales.split(",") : defaultLocales;
+  let translations = localeArray.reduce((acc, curr) => Object.assign(acc, { [curr]: '' }), {});
 
-// const toLocaleParams = (locales) => {
-//   try {
-//     return locales
-//       .split(",")
-//       .reduce(
-//         (toLocales, locale) =>
-//           locale ? [...toLocales, `to=${locale}`] : toLocales,
-//         []
-//       )
-//       .join("&");
-//   } catch (e) {
-//     return [];
-//   }
-// };
-
-const translate = async (text, locales) => {
-  const localeArray = locales.split(",");
-
-  if (!localeArray.length) {
-    return console.error(
-      "Please, add locales in comma separated value format (e.g. -o es,pt,it)"
+  if (!locales) {
+    console.warn(
+      "No locales defined, using default: " + defaultLocales.join(' ,')
     );
   }
 
   localeArray.forEach(async (locale) => {
-    const response = await getTranslation(text, locale);
-    console.log(`${locale}: `, response?.data?.[0]?.translations?.[0]?.text);
+    let translation, q = "'";
+    const standardLocale = locale === 'zh-Hans' ? 'zh' : locale;
+    if (locale === 'en') {
+      translation = text;
+    } else { 
+      const response = await getTranslation(text, locale); 
+      translation = response?.data?.[0]?.translations?.[0]?.text;
+    }
+    if (translation.includes("'")) {
+      q = '"'
+    }
+    if (key) {
+      translation = `${key}: ${q}${translation}${q},`;
+      translations[standardLocale] = translation;
+    } else {
+      translations[standardLocale] = translation;
+    } 
+    if (afterKey && rootPath) { // Replace in translation files
+      child.exec(`sed -i '' -e "s/.*${afterKey.replace(/[\\$'"\[\]]/g, "\\$&")}.*/\ \ ${translation.replace(/[\\$'"\[\]]/g, "\\$&")}\\n&/" "${rootPath}/${standardLocale}.js"`, console.log);
+    }
+    console.log(translations);
   });
 };
 
@@ -43,20 +49,20 @@ const getTranslation = async (Text, to) => {
       headers,
     });
   } catch (error) {
-    console.log("There was an error requesting your translation:: ", error);
+    console.log("There was an error requesting your translation:: ", error.message);
   }
 };
 
 function init() {
-  const { w: text, o: locales } = minimist(process.argv.slice(2));
+  const { w: text, o: locales, k: key, a: afterKey, p: rootPath } = minimist(process.argv.slice(2));
 
-  if (!text || !locales) {
+  if (!text) {
     return console.error(
-      "Please provide a text to translate (-w) and at least a locale (-o) for translating"
+      "Please provide a text to translate (-w) for translating"
     );
   }
 
-  translate(text, locales);
+  translate(text, locales, key, afterKey, rootPath);
 }
 
 init();
